@@ -94,16 +94,16 @@ export const useFocusStore = defineStore("focus", () => {
     const fields: string[] = [];
     const values: any[] = [];
 
-    if (data.start_time !== undefined) { fields.push("start_time = $1"); values.push(data.start_time); }
-    if (data.end_time !== undefined) { fields.push("end_time = $2"); values.push(data.end_time); }
-    if (data.duration !== undefined) { fields.push("duration = $3"); values.push(data.duration); }
-    if (data.break_duration !== undefined) { fields.push("break_duration = $4"); values.push(data.break_duration); }
-    if (data.note !== undefined) { fields.push("note = $5"); values.push(data.note); }
+    if (data.start_time !== undefined) { values.push(data.start_time); fields.push(`start_time = $${values.length}`); }
+    if (data.end_time !== undefined) { values.push(data.end_time); fields.push(`end_time = $${values.length}`); }
+    if (data.duration !== undefined) { values.push(data.duration); fields.push(`duration = $${values.length}`); }
+    if (data.break_duration !== undefined) { values.push(data.break_duration); fields.push(`break_duration = $${values.length}`); }
+    if (data.note !== undefined) { values.push(data.note); fields.push(`note = $${values.length}`); }
 
     if (fields.length === 0) return;
 
-    fields.push("updated_at = $6");
     values.push(now);
+    fields.push(`updated_at = $${values.length}`);
     values.push(id);
 
     await db.execute(`UPDATE focus_records SET ${fields.join(", ")} WHERE id = $7`, values);

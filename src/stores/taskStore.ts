@@ -70,19 +70,19 @@ export const useTaskStore = defineStore("task", () => {
     const fields: string[] = [];
     const values: any[] = [];
 
-    if (data.name !== undefined) { fields.push("name = $1"); values.push(data.name); }
-    if (data.timer_mode !== undefined) { fields.push("timer_mode = $2"); values.push(data.timer_mode); }
-    if (data.duration !== undefined) { fields.push("duration = $3"); values.push(data.duration); }
-    if (data.color !== undefined) { fields.push("color = $4"); values.push(data.color); }
-    if (data.icon !== undefined) { fields.push("icon = $5"); values.push(data.icon); }
+    if (data.name !== undefined) { values.push(data.name); fields.push(`name = $${values.length}`); }
+    if (data.timer_mode !== undefined) { values.push(data.timer_mode); fields.push(`timer_mode = $${values.length}`); }
+    if (data.duration !== undefined) { values.push(data.duration); fields.push(`duration = $${values.length}`); }
+    if (data.color !== undefined) { values.push(data.color); fields.push(`color = $${values.length}`); }
+    if (data.icon !== undefined) { values.push(data.icon); fields.push(`icon = $${values.length}`); }
 
     if (fields.length === 0) return;
 
-    fields.push("updated_at = $6");
     values.push(now);
+    fields.push(`updated_at = $${values.length}`);
     values.push(id);
 
-    await db.execute(`UPDATE tasks SET ${fields.join(", ")} WHERE id = $7`, values);
+    await db.execute(`UPDATE tasks SET ${fields.join(", ")} WHERE id = $${values.length}`, values);
     await fetchTasks();
   }
 
