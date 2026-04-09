@@ -51,7 +51,10 @@
           {{ formatTime(timerStore.displaySeconds) }}
         </div>
 
-        <div v-if="timerStore.isOnBreak" class="timer-status">
+        <div v-if="timerStore.isCountdownFinished" class="timer-status">
+          <n-tag type="error" size="large">计时结束</n-tag>
+        </div>
+        <div v-else-if="timerStore.isOnBreak" class="timer-status">
           <n-tag type="warning" size="large">休息中</n-tag>
         </div>
         <div v-else-if="timerStore.isPaused" class="timer-status">
@@ -62,7 +65,7 @@
         </div>
 
         <div class="timer-actions">
-          <template v-if="!timerStore.isOnBreak">
+          <template v-if="!timerStore.isCountdownFinished && !timerStore.isOnBreak">
             <n-button
               v-if="!timerStore.isPaused"
               type="warning"
@@ -275,6 +278,16 @@ onMounted(() => {
 
 .timer-display.timer-break {
   color: #f0a020;
+}
+
+.timer-display:has(+ .timer-status .n-tag--error) {
+  color: #d03050;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 .timer-status {
